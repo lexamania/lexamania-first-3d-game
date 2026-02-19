@@ -7,14 +7,8 @@ public partial class Player : CharacterBody3D
     [Export] public float Speed = 14;
     [Export] public float FallAcceleration = 75;
     [Export] public float JumpPower = 20;
-    [Export] public required Node3D Pivot;
 
     private Vector3 _targetVelocity = Vector3.Zero;
-
-    public override void _Ready()
-    {
-        Pivot = GetNode<Node3D>("Pivot");
-    }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -32,7 +26,7 @@ public partial class Player : CharacterBody3D
         if (direction != Vector3.Zero)
         {
             direction = direction.Normalized();
-            Pivot.Basis = Basis.LookingAt(direction);
+            Basis = Basis.LookingAt(direction, Vector3.Up);
         }
 
         _targetVelocity.X = direction.X * Speed;
