@@ -10,6 +10,7 @@ public partial class Mob : CharacterBody3D
     [Signal] public delegate void SquashedEventHandler();
 
     private Vector3 LocalVelocity;
+    private AnimationPlayer _animationPlayer;
 
     public void Initialize(Vector3 startPosition, Vector3 playerPosition)
     {
@@ -17,10 +18,13 @@ public partial class Mob : CharacterBody3D
         RotateY((float)GD.RandRange(-Mathf.Pi / 4, Mathf.Pi / 4));
 
         var speed = (float)GD.RandRange(MinSpeed, MaxSpeed);
+
         LocalVelocity = Vector3.Forward * speed;
         LocalVelocity = LocalVelocity.Rotated(Vector3.Up, Rotation.Y);
-
         Velocity = LocalVelocity;
+
+        var animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+        animationPlayer.SpeedScale = speed / MinSpeed;
     }
 
     public void Squash()

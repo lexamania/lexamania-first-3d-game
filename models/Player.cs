@@ -12,11 +12,19 @@ public partial class Player : CharacterBody3D
     [Signal] public delegate void HitEventHandler();
 
     private Vector3 _targetVelocity = Vector3.Zero;
+    private AnimationPlayer _animationPlayer;
+    private Node3D _pivot;
+
+    public override void _Ready()
+    {
+        _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
+        _pivot = GetNode<Node3D>("Pivot");
+    }
 
     public override void _PhysicsProcess(double delta)
     {
         CalculateMovement((float)delta);
-        CalculateGravityJump((float)delta);
+        CalculateGravityAndJump((float)delta);
         CalculateCollisions((float)delta);
 
         Velocity = _targetVelocity;
@@ -44,9 +52,11 @@ public partial class Player : CharacterBody3D
 
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
+
+        _animationPlayer.SpeedScale = direction != Vector3.Zero ? 2 : 1;
     }
 
-    private void CalculateGravityJump(float delta)
+    private void CalculateGravityAndJump(float delta)
     {
         var onFloor = IsOnFloor();
 
@@ -55,11 +65,19 @@ public partial class Player : CharacterBody3D
 
         if (onFloor && Input.IsActionPressed(Actions.Jump))
             _targetVelocity.Y = JumpImpulse;
+
+        var angle = Mathf.Pi / 6.0f;
+        var progress = Velocity.Y / JumpImpulse;
+        _pivot.Rotation = new Vector3(
+            angle * progress,
+            _pivot.Rotation.Y,
+            _pivot.Rotation.Z
+        );
     }
 
     private void CalculateCollisions(float delta)
     {
-        for(int i = 0; i < GetSlideCollisionCount(); ++i)
+        for (int i = 0; i < GetSlideCollisionCount(); ++i)
         {
             var collision = GetSlideCollision(i);
             if (collision.GetCollider() is not Mob mob)
@@ -77,7 +95,7 @@ public partial class Player : CharacterBody3D
     private void Die()
     {
         EmitSignal(SignalName.Hit);
-        QueueFree();  
+        QueueFree();
     }
 
     private void OnMobDetected(Node3D mob)
