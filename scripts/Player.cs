@@ -4,23 +4,34 @@ namespace First3dGame;
 
 public partial class Player : CharacterBody3D
 {
-    [Export] public float Speed = 14;
-    [Export] public float FallAcceleration = 75;
-    [Export] public float JumpPower = 20;
+    [Export] public float Speed { get; set; } = 14;
+    [Export] public float FallAcceleration { get; set; } = 75;
+    [Export] public float JumpImpulse { get; set; } = 20;
+    [Export] public float BounceImpulse { get; set; } = 16;
 
     private Vector3 _targetVelocity = Vector3.Zero;
 
     public override void _PhysicsProcess(double delta)
     {
+        CalculateMovement((float)delta);
+        CalculateGravityJump((float)delta);
+        CalculateCollisions((float)delta);
+
+        Velocity = _targetVelocity;
+        MoveAndSlide();
+    }
+
+    private void CalculateMovement(float delta)
+    {
         var direction = Vector3.Zero;
 
-        if (Input.IsActionPressed(ActionsEnum.MoveForward))
+        if (Input.IsActionPressed(Actions.MoveForward))
             direction.Z -= 1;
-        if (Input.IsActionPressed(ActionsEnum.MoveBack))
+        if (Input.IsActionPressed(Actions.MoveBack))
             direction.Z += 1;
-        if (Input.IsActionPressed(ActionsEnum.MoveLeft))
+        if (Input.IsActionPressed(Actions.MoveLeft))
             direction.X -= 1;
-        if (Input.IsActionPressed(ActionsEnum.MoveRight))
+        if (Input.IsActionPressed(Actions.MoveRight))
             direction.X += 1;
 
         if (direction != Vector3.Zero)
@@ -31,13 +42,33 @@ public partial class Player : CharacterBody3D
 
         _targetVelocity.X = direction.X * Speed;
         _targetVelocity.Z = direction.Z * Speed;
+    }
 
-        if (!IsOnFloor())
+    private void CalculateGravityJump(float delta)
+    {
+        var onFloor = IsOnFloor();
+
+        if (!onFloor)
             _targetVelocity.Y -= FallAcceleration * (float)delta;
-        else if (Input.IsActionPressed(ActionsEnum.Jump))
-            _targetVelocity.Y = JumpPower;
 
-        Velocity = _targetVelocity;
-        MoveAndSlide();
+        if (onFloor && Input.IsActionPressed(Actions.Jump))
+            _targetVelocity.Y = JumpImpulse;
+    }
+
+    private void CalculateCollisions(float delta)
+    {
+        for(int i = 0; i < GetSlideCollisionCount(); ++i)
+        {
+            var collision = GetSlideCollision(i);
+            if (collision.GetCollider() is not Mob mob)
+                continue;
+
+            if (Vector3.Up.Dot(collision.GetNormal()) > 0.1f)
+            {
+                mob.Squash();
+                _targetVelocity.Y = BounceImpulse;
+                break;
+            }
+        }
     }
 }

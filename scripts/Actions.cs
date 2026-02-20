@@ -1,6 +1,6 @@
 namespace First3dGame;
 
-public static class ActionsEnum
+public static class Actions
 {
     public const string MoveForward = "move_forward"; 
     public const string MoveBack = "move_back"; 

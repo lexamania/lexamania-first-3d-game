@@ -6,6 +6,7 @@ public partial class Mob : CharacterBody3D
 {
     [Export] public float MinSpeed = 10;
     [Export] public float MaxSpeed = 18;
+    [Signal] public delegate void SquashedEventHandler();
 
     private Vector3 LocalVelocity;
 
@@ -19,6 +20,12 @@ public partial class Mob : CharacterBody3D
         LocalVelocity = LocalVelocity.Rotated(Vector3.Up, Rotation.Y);
 
         Velocity = LocalVelocity;
+    }
+
+    public void Squash()
+    {
+        EmitSignal(SignalName.Squashed);
+        QueueFree();
     }
 
     public override void _PhysicsProcess(double delta)
