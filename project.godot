@@ -16,8 +16,8 @@ config/features=PackedStringArray("4.6", "C#", "Mobile")
 
 [display]
 
-window/size/viewport_width=720
-window/size/viewport_height=540
+window/size/viewport_width=1366
+window/size/viewport_height=768
 
 [dotnet]
 

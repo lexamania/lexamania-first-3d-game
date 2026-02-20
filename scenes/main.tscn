@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://2c8hr3kf77wl"]
 
 [ext_resource type="PackedScene" uid="uid://bngig8622b0o1" path="res://models/player.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://c20v3p7g2d2x5" path="res://scripts/Main.cs" id="1_tbgi4"]
 [ext_resource type="Script" uid="uid://dv15gc1s1mgl" path="res://scripts/MobSpawner.cs" id="2_sugp2"]
 [ext_resource type="Material" path="res://art/body.tres" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cywqgo2urkr28" path="res://models/mob.tscn" id="3_tbgi4"]
@@ -14,7 +15,7 @@ size = Vector3(60, 2, 60)
 [sub_resource type="Curve3D" id="Curve3D_tbgi4"]
 closed = true
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -22.04404, 0, -23.82066, 0, 0, 0, 0, 0, 0, -22.04404, 0, 25.235983, 0, 0, 0, 0, 0, 0, 22.017014, 0, 25.036158, 0, 0, 0, 0, 0, 0, 22.116928, 0, -23.82066),
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -29.04404, 0, -23.82066, 0, 0, 0, 0, 0, 0, -29.04404, 0, 25.235983, 0, 0, 0, 0, 0, 0, 29.017014, 0, 25.036158, 0, 0, 0, 0, 0, 0, 29.116928, 0, -23.82066),
 "tilts": PackedFloat32Array(0, 0, 0, 0)
 }
 point_count = 4
@@ -23,6 +24,7 @@ point_count = 4
 material = ExtResource("3_jyhfs")
 
 [node name="Main" type="Node3D" unique_id=1575391593]
+script = ExtResource("1_tbgi4")
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=266519679]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -61,7 +63,7 @@ MobScene = ExtResource("3_tbgi4")
 curve = SubResource("Curve3D_tbgi4")
 
 [node name="SpawnLocation" type="PathFollow3D" parent="MobSpawner/SpawnPath" unique_id=548132802]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -22.04404, 0, -23.82066)
+transform = Transform3D(-0.9999996, 0, -8.742274e-08, 0, 1, 0, 8.742274e-08, 0, -0.9999996, -29.04404, 0, -23.82066)
 
 [node name="Timer" type="Timer" parent="MobSpawner" unique_id=1107180528]
 wait_time = 0.5
@@ -70,19 +72,21 @@ autostart = true
 [node name="Temp" type="Node3D" parent="." unique_id=2076283079]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Temp" unique_id=1749812651]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, -24)
 mesh = SubResource("CylinderMesh_tefeu")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Temp" unique_id=1033216072]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0, -24)
 mesh = SubResource("CylinderMesh_tefeu")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Temp" unique_id=275532344]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 0, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, 25)
 mesh = SubResource("CylinderMesh_tefeu")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Temp" unique_id=418532382]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0, 25)
 mesh = SubResource("CylinderMesh_tefeu")
 
+[connection signal="Hit" from="Player" to="." method="OnPlayerHit"]
+[connection signal="Hit" from="Player" to="MobSpawner" method="OnPlayerHit"]
 [connection signal="timeout" from="MobSpawner/Timer" to="MobSpawner" method="OnTimerTimeout"]

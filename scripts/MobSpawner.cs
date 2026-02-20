@@ -26,4 +26,9 @@ public partial class MobSpawner : Node3D
 
         AddChild(mob);
     }
+
+    private void OnPlayerHit()
+    {
+        _timer.Stop();
+    }
 }
