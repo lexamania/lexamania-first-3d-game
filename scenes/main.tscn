@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://dv15gc1s1mgl" path="res://scripts/MobSpawner.cs" id="2_sugp2"]
 [ext_resource type="Material" path="res://art/body.tres" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cywqgo2urkr28" path="res://models/mob.tscn" id="3_tbgi4"]
+[ext_resource type="FontFile" uid="uid://cyxhh7ddkn62q" path="res://fonts/Montserrat-Medium.ttf" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://cnbfp47fll2tg" path="res://scripts/ScoreLabel.cs" id="7_tipki"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sgp6g"]
 size = Vector3(60, 2, 60)
@@ -23,6 +25,10 @@ point_count = 4
 [sub_resource type="CylinderMesh" id="CylinderMesh_tefeu"]
 material = ExtResource("3_jyhfs")
 
+[sub_resource type="Theme" id="Theme_85g3d"]
+default_font = ExtResource("6_o6xl0")
+default_font_size = 22
+
 [node name="Main" type="Node3D" unique_id=1575391593]
 script = ExtResource("1_tbgi4")
 
@@ -37,23 +43,21 @@ shape = SubResource("BoxShape3D_sgp6g")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1946948772]
 mesh = SubResource("BoxMesh_o5qli")
 
-[node name="Player" parent="." unique_id=26144570 instance=ExtResource("1_o5qli")]
-
-[node name="World" type="Node3D" parent="." unique_id=540826829]
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World" unique_id=1501092480]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1501092480]
 transform = Transform3D(1, 0, 0, 0, 0.25881904, 0.9659259, 0, -0.9659259, 0.25881904, 0, 30, 0)
 shadow_enabled = true
 
-[node name="CameraPivot" type="Marker3D" parent="World" unique_id=1327553360]
+[node name="CameraPivot" type="Marker3D" parent="." unique_id=1327553360]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0)
 
-[node name="Camera3D" type="Camera3D" parent="World/CameraPivot" unique_id=12879598]
+[node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=12879598]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 19)
 projection = 1
 size = 32.0
 near = 0.001
 far = 100.0
+
+[node name="Player" parent="." unique_id=26144570 instance=ExtResource("1_o5qli")]
 
 [node name="MobSpawner" type="Node3D" parent="." unique_id=1818471386]
 script = ExtResource("2_sugp2")
@@ -69,23 +73,38 @@ transform = Transform3D(-0.9999996, 0, -8.742274e-08, 0, 1, 0, 8.742274e-08, 0, 
 wait_time = 0.5
 autostart = true
 
-[node name="Temp" type="Node3D" parent="." unique_id=2076283079]
+[node name="Cylinders" type="Node3D" parent="MobSpawner" unique_id=2076283079]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Temp" unique_id=1749812651]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MobSpawner/Cylinders" unique_id=1749812651]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, -24)
 mesh = SubResource("CylinderMesh_tefeu")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Temp" unique_id=1033216072]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MobSpawner/Cylinders" unique_id=1033216072]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0, -24)
 mesh = SubResource("CylinderMesh_tefeu")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="Temp" unique_id=275532344]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="MobSpawner/Cylinders" unique_id=275532344]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, 25)
 mesh = SubResource("CylinderMesh_tefeu")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="Temp" unique_id=418532382]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MobSpawner/Cylinders" unique_id=418532382]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 0, 25)
 mesh = SubResource("CylinderMesh_tefeu")
+
+[node name="UserInterface" type="Control" parent="." unique_id=1002345746]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = SubResource("Theme_85g3d")
+
+[node name="ScoreLabel" type="Label" parent="UserInterface" unique_id=1412922277]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0.103743516, 0.10374353, 0.103743516, 1)
+text = "Score: 0"
+script = ExtResource("7_tipki")
 
 [connection signal="Hit" from="Player" to="." method="OnPlayerHit"]
 [connection signal="Hit" from="Player" to="MobSpawner" method="OnPlayerHit"]
