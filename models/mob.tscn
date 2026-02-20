@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cywqgo2urkr28"]
 
-[ext_resource type="Script" uid="uid://doed6upku174r" path="res://scripts/Mob.cs" id="1_4cnul"]
+[ext_resource type="Script" uid="uid://dphdvrljd1nti" path="res://models/Mob.cs" id="1_4cnul"]
 [ext_resource type="PackedScene" uid="uid://bicorb7we351t" path="res://art/mob.glb" id="1_ox182"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ox182"]

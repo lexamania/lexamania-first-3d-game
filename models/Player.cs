@@ -1,6 +1,6 @@
 using Godot;
 
-namespace First3dGame;
+namespace First3dGame.Models;
 
 public partial class Player : CharacterBody3D
 {
